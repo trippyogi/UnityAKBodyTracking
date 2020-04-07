@@ -76,24 +76,9 @@ public class SkeletalTrackingProvider : BackgroundDataProvider
                                     readFirstFrame = true;
                                     initialTimestamp = depthImage.DeviceTimestamp;
                                 }
-                                currentFrameData.TimestampInMs = (float)(depthImage.DeviceTimestamp - initialTimestamp).TotalMilliseconds;
-                                currentFrameData.DepthImageWidth = depthImage.WidthPixels;
-                                currentFrameData.DepthImageHeight = depthImage.HeightPixels;
 
                                 // Read image data from the SDK.
                                 var depthFrame = MemoryMarshal.Cast<byte, ushort>(depthImage.Memory.Span);
-
-                                // Repack data and store image data.
-                                int byteCounter = 0;
-                                currentFrameData.DepthImageSize = currentFrameData.DepthImageWidth * currentFrameData.DepthImageHeight * 3;
-
-                                for(int it = currentFrameData.DepthImageWidth * currentFrameData.DepthImageHeight - 1; it > 0; it--)
-                                {
-                                    byte b = (byte)(depthFrame[it] / (ConfigLoader.Instance.Configs.SkeletalTracking.MaximumDisplayedDepthInMillimeters) * 255);
-                                    currentFrameData.DepthImage[byteCounter++] = b;
-                                    currentFrameData.DepthImage[byteCounter++] = b;
-                                    currentFrameData.DepthImage[byteCounter++] = b;
-                                }
 
                                 if(RawDataLoggingFile != null && RawDataLoggingFile.CanWrite)
                                 {
