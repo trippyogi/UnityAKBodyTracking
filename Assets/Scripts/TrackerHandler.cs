@@ -5,8 +5,6 @@ using Microsoft.Azure.Kinect.BodyTracking;
 
 public class TrackerHandler : MonoBehaviour
 {
-    public bool DrawSkeletons = true;
-
     public void UpdateTracker(BackgroundData trackerFrameData)
     {
         //this is an array in case you want to get the n closest bodies

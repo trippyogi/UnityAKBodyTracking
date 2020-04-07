@@ -28,9 +28,7 @@ public class SkeletalTrackingProvider : BackgroundDataProvider
 
                 Debug.Log("Open K4A device successful. id " + id + "sn:" + device.SerialNum);
 
-                var deviceCalibration = device.GetCalibration();
-
-                using (var tracker = Tracker.Create(deviceCalibration,
+                using (var tracker = Tracker.Create(device.GetCalibration(),
                     new TrackerConfiguration()
                         {ProcessingMode = TrackerProcessingMode.Gpu, SensorOrientation = SensorOrientation.Default}))
                 {
@@ -60,7 +58,7 @@ public class SkeletalTrackingProvider : BackgroundDataProvider
                                 for (uint i = 0; i < currentFrameData.NumOfBodies; i++)
                                 {
                                     currentFrameData.Bodies[i]
-                                        .CopyFromBodyTrackingSdk(frame.GetBody(i), deviceCalibration);
+                                        .CopyFromBodyTrackingSdk(frame.GetBody(i));
                                 }
 
                                 if (!_readFirstFrame)
