@@ -60,6 +60,7 @@ crashlytics-build.properties
 
 # Large files required for body tracking
 cublas64_100.dll
+cudart64_100.dll
 cudnn64_7.dll
 onnxruntime.dll
 dnn_model_2_0.onnx
