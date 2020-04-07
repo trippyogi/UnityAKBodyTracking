@@ -11,7 +11,7 @@ public class BackgroundData : ISerializable
     // List of all bodies in current frame, each body is list of Body objects.
     public Body[] Bodies { get; set; }
 
-    public BackgroundData(int maxDepthImageSize = 1024 * 1024 * 3, int maxBodiesCount = 20, int maxJointsSize = 100)
+    public BackgroundData(int maxBodiesCount = 20, int maxJointsSize = 100)
     {
         Bodies = new Body[maxBodiesCount];
         for (var i = 0; i < maxBodiesCount; i++)
@@ -29,12 +29,12 @@ public class BackgroundData : ISerializable
     public void GetObjectData(SerializationInfo info, StreamingContext context)
     {
         info.AddValue("NumOfBodies", NumOfBodies, typeof(ulong));
-        var ValidBodies = new Body[NumOfBodies];
+        var validBodies = new Body[NumOfBodies];
         for (var i = 0; i < (int)NumOfBodies; i ++)
         {
-            ValidBodies[i] = Bodies[i];
+            validBodies[i] = Bodies[i];
         }
-        info.AddValue("Bodies", ValidBodies, typeof(Body[]));
+        info.AddValue("Bodies", validBodies, typeof(Body[]));
     }
 }
 

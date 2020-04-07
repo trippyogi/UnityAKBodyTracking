@@ -3,15 +3,15 @@ using System.Threading.Tasks;
 
 public abstract class BackgroundDataProvider
 {
-    protected volatile bool m_runBackgroundThread;
-    private BackgroundData m_frameBackgroundData = new BackgroundData();
-    private bool m_latest = false;
-    object m_lockObj = new object();
     public bool IsRunning { get; set; } = false;
+    protected volatile bool RunBackgroundThread;
+    private BackgroundData _frameBackgroundData = new BackgroundData();
+    private bool _latest = false;
+    private readonly object _lockObj = new object();
 
     public void StartClientThread(int id)
     {
-        m_runBackgroundThread = true;
+        RunBackgroundThread = true;
         Task.Run(() => RunBackgroundThreadAsync(id));
     }
 
@@ -20,29 +20,29 @@ public abstract class BackgroundDataProvider
     public void StopClientThread()
     {
         UnityEngine.Debug.Log("Stopping BackgroundDataProvider thread.");
-        m_runBackgroundThread = false;
+        RunBackgroundThread = false;
     }
 
     public void SetCurrentFrameData(ref BackgroundData currentFrameData)
     {
-        lock (m_lockObj)
+        lock (_lockObj)
         {
             var temp = currentFrameData;
-            currentFrameData = m_frameBackgroundData;
-            m_frameBackgroundData = temp;
-            m_latest = true;
+            currentFrameData = _frameBackgroundData;
+            _frameBackgroundData = temp;
+            _latest = true;
         }
     }
 
     public bool GetCurrentFrameData(ref BackgroundData dataBuffer)
     {
-        lock (m_lockObj)
+        lock (_lockObj)
         {
             var temp = dataBuffer;
-            dataBuffer = m_frameBackgroundData;
-            m_frameBackgroundData = temp;
-            bool result = m_latest;
-            m_latest = false;
+            dataBuffer = _frameBackgroundData;
+            _frameBackgroundData = temp;
+            bool result = _latest;
+            _latest = false;
             return result;
         }
     }

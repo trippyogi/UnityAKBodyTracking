@@ -35,7 +35,7 @@ public class SkeletalTrackingProvider : BackgroundDataProvider
                         {ProcessingMode = TrackerProcessingMode.Gpu, SensorOrientation = SensorOrientation.Default}))
                 {
                     Debug.Log("Body tracker created.");
-                    while (m_runBackgroundThread)
+                    while (RunBackgroundThread)
                     {
                         using (var sensorCapture = device.GetCapture())
                         {
