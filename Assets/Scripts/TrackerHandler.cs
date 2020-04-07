@@ -5,9 +5,7 @@ using Microsoft.Azure.Kinect.BodyTracking;
 
 public class TrackerHandler : MonoBehaviour
 {
-    public bool drawSkeletons = true;
-
-    public void updateTracker(BackgroundData trackerFrameData)
+    public void UpdateTracker(BackgroundData trackerFrameData)
     {
         //this is an array in case you want to get the n closest bodies
         var closestBody = FindClosestTrackedBody(trackerFrameData);
@@ -17,20 +15,7 @@ public class TrackerHandler : MonoBehaviour
         RenderSkeleton(skeleton, 0);
     }
 
-    int FindIndexFromId(BackgroundData frameData, int id)
-    {
-        var retIndex = -1;
-        for (var i = 0; i < (int) frameData.NumOfBodies; i++)
-        {
-            if ((int) frameData.Bodies[i].Id != id) continue;
-            retIndex = i;
-            break;
-        }
-
-        return retIndex;
-    }
-
-    private int FindClosestTrackedBody(BackgroundData trackerFrameData)
+    private static int FindClosestTrackedBody(BackgroundData trackerFrameData)
     {
         var closestBody = -1;
         const float MAX_DISTANCE = 5000.0f;
@@ -48,27 +33,12 @@ public class TrackerHandler : MonoBehaviour
         return closestBody;
     }
 
-    public void turnOnOffSkeletons()
-    {
-        drawSkeletons = !drawSkeletons;
-        const int bodyRenderedNum = 0;
-        for (var jointNum = 0; jointNum < (int) JointId.Count; jointNum++)
-        {
-            transform.GetChild(bodyRenderedNum).GetChild(jointNum).gameObject.GetComponent<MeshRenderer>().enabled =
-                drawSkeletons;
-            transform.GetChild(bodyRenderedNum).GetChild(jointNum).GetChild(0).GetComponent<MeshRenderer>().enabled =
-                drawSkeletons;
-        }
-    }
-
     public void RenderSkeleton(Body skeleton, int skeletonNumber)
     {
         for (var jointNum = 0; jointNum < (int) JointId.Count; jointNum++)
         {
             var jointPos = new Vector3(skeleton.JointPositions3D[jointNum].X,
                 -skeleton.JointPositions3D[jointNum].Y, skeleton.JointPositions3D[jointNum].Z);
-            var offsetPosition = transform.rotation * jointPos;
-            var positionInTrackerRootSpace = transform.position + offsetPosition;
             var jointRot = new Quaternion(skeleton.JointRotations[jointNum].X,
                 skeleton.JointRotations[jointNum].Y, skeleton.JointRotations[jointNum].Z,
                 skeleton.JointRotations[jointNum].W);

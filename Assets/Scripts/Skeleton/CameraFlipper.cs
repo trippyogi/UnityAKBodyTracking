@@ -2,31 +2,29 @@
 
 public class CameraFlipper : MonoBehaviour
 {
-    Camera cam;
-
     [Tooltip("Flip by x axis")]
-    public bool flipByX;
+    public bool FlipByX;
+    private Camera _cam;
+
 
     void Start()
     {
-        cam = GetComponent<Camera>();
+        _cam = GetComponent<Camera>();
     }
 
-    // Flip fron camera to be aligned in directions with depth image on scene.
+    // Flip front camera to be aligned in directions with depth image on scene.
     void OnPreCull()
     {
-        if (flipByX)
-        {
-            cam.ResetWorldToCameraMatrix();
-            cam.ResetProjectionMatrix();
-            Vector3 scale = new Vector3(-1, 1, 1);
-            cam.projectionMatrix = cam.projectionMatrix * Matrix4x4.Scale(scale);
-        }
+        if (!FlipByX) return;
+        _cam.ResetWorldToCameraMatrix();
+        _cam.ResetProjectionMatrix();
+        var scale = new Vector3(-1, 1, 1);
+        _cam.projectionMatrix = _cam.projectionMatrix * Matrix4x4.Scale(scale);
     }
 
     void OnPreRender()
     {
-        if (flipByX)
+        if (FlipByX)
         {
             GL.invertCulling = true;
         }
@@ -34,7 +32,7 @@ public class CameraFlipper : MonoBehaviour
 
     void OnPostRender()
     {
-        if (flipByX)
+        if (FlipByX)
         {
             GL.invertCulling = false;
         }
